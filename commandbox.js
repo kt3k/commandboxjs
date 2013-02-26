@@ -9,47 +9,47 @@ this.commandBox = this.exports = (function () {
     'use strict';
 
     var commandBox = function (args) {
-        var commands_ = [];
-        var hooks_ = args.hooks || {};
-        var x_ = hooks_;
+        var commandStack = [];
+        var hooks = args.hooks || {};
+        var currentNode = hooks;
 
-        var evokeHook_ = function (cmd) {
+        var evokeHook = function (cmd) {
             var callback;
             var toReset = false;
 
-            x_ = x_[cmd];
+            currentNode = currentNode[cmd];
 
-            if (x_ == null) {
+            if (currentNode == null) {
                 return;
             }
 
-            if (x_ instanceof Array) {
-                callback = x_[0];
-                x_ = x_[1];
+            if (currentNode instanceof Array) {
+                callback = currentNode[0];
+                currentNode = currentNode[1];
             } else {
-                callback = x_;
+                callback = currentNode;
                 toReset = true;
             }
 
             if (typeof callback === 'function') {
-                callback(commands_);
+                callback(commandStack);
             }
 
             if (toReset) {
-                reset_();
+                reset();
             }
         };
 
-        var reset_ = function () {
-            commands_ = [];
-            x_ = hooks_;
+        var reset = function () {
+            commandStack = [];
+            currentNode = hooks;
         };
 
         return {
             command: function (cmd) {
-                commands_.push(cmd);
+                commandStack.push(cmd);
 
-                evokeHook_(cmd);
+                evokeHook(cmd);
             }
         };
     };
