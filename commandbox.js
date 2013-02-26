@@ -14,28 +14,19 @@ this.commandBox = this.exports = (function () {
         var currentNode = hooks;
 
         var evokeHook = function (cmd) {
-            var callback;
-            var toReset = false;
-
             currentNode = currentNode[cmd];
 
             if (currentNode == null) {
                 return;
             }
 
-            if (currentNode instanceof Array) {
-                callback = currentNode[0];
-                currentNode = currentNode[1];
-            } else {
-                callback = currentNode;
-                toReset = true;
+            if (typeof currentNode.callback === 'function') {
+                currentNode.callback.call(null, commandStack);
             }
 
-            if (typeof callback === 'function') {
-                callback(commandStack);
-            }
+            currentNode = currentNode.nextNode;
 
-            if (toReset) {
+            if (currentNode == null) {
                 reset();
             }
         };
