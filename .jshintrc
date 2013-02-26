@@ -12,7 +12,5 @@
     "indent": 4,
 
     "eqnull": true,
-    "expr": true,
-    "newcap": false,
-    "es5": true
+    "expr": true
 }

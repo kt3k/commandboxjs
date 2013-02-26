@@ -32,7 +32,7 @@ this.commandBox = this.exports = (function () {
             }
 
             if (typeof callback === 'function') {
-                callback.call(null, commands_);
+                callback(commands_);
             }
 
             if (toReset) {
@@ -50,7 +50,7 @@ this.commandBox = this.exports = (function () {
                 commands_.push(cmd);
 
                 evokeHook_(cmd);
-            },
+            }
         };
     };
 
