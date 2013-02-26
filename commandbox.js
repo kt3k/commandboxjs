@@ -14,8 +14,8 @@ this.commandBox = this.exports = (function () {
         var x_ = hooks_;
 
         var evokeHook_ = function (cmd) {
-            var callback,
-                toReset = false;
+            var callback;
+            var toReset = false;
 
             x_ = x_[cmd];
 
