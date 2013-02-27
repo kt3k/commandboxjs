@@ -10,6 +10,7 @@ this.commandBox = this.exports = (function () {
 
     var commandBox = function (args) {
         var commandStack = [];
+        var nodeStack = [];
         var hooks = args.hooks || {};
         var currentNode = hooks;
 
@@ -17,6 +18,9 @@ this.commandBox = this.exports = (function () {
             if (currentNode[cmd] == null) {
                 return;
             }
+
+            commandStack.push(cmd);
+            nodeStack.push(currentNode);
 
             currentNode = currentNode[cmd];
 
@@ -33,14 +37,21 @@ this.commandBox = this.exports = (function () {
 
         var reset = function () {
             commandStack = [];
+            nodeStack = [];
             currentNode = hooks;
         };
 
         return {
             command: function (cmd) {
-                commandStack.push(cmd);
-
                 evokeHook(cmd);
+            },
+
+            pop: function () {
+                commandStack.pop();
+                currentNode = nodeStack.pop();
+                if (currentNode == null) {
+                    currentNode = hooks;
+                }
             }
         };
     };
