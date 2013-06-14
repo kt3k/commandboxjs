@@ -5,57 +5,47 @@
  * url: https://github.com/kt3k/commandboxjs
  */
 
-this.commandBox = this.exports = (function () {
+this.commandBox = this.exports = Object.branch(function (commandBoxPrototype) {
     'use strict';
 
-    var commandBox = function (args) {
-        var commandStack = [];
-        var nodeStack = [];
-        var hooks = args.hooks || {};
-        var currentNode = hooks;
+    commandBoxPrototype.constructor = function (args) {
+        this.hooks = args.hooks || {};
+        this.reset();
+    }
 
-        var evokeHook = function (cmd) {
-            if (currentNode[cmd] == null) {
-                return;
-            }
+    commandBoxPrototype.command = function (cmd) {
+        if (this.currentNode[cmd] == null) {
+            console.warn('illegal command: ' + cmd);
+            return;
+        }
 
-            commandStack.push(cmd);
-            nodeStack.push(currentNode);
+        this.commandStack.push(cmd);
+        this.nodeStack.push(this.currentNode);
 
-            currentNode = currentNode[cmd];
+        this.currentNode = this.currentNode[cmd];
 
-            if (typeof currentNode.callback === 'function') {
-                currentNode.callback.call(null, commandStack);
-            }
+        if (typeof this.currentNode.callback === 'function') {
+            this.currentNode.callback(this.commandStack);
+        }
 
-            currentNode = currentNode.nextNode;
+        this.currentNode = this.currentNode.nextNode;
 
-            if (currentNode == null) {
-                reset();
-            }
-        };
-
-        var reset = function () {
-            commandStack = [];
-            nodeStack = [];
-            currentNode = hooks;
-        };
-
-        return {
-            command: function (cmd) {
-                evokeHook(cmd);
-            },
-
-            pop: function () {
-                commandStack.pop();
-                currentNode = nodeStack.pop();
-                if (currentNode == null) {
-                    currentNode = hooks;
-                }
-            }
-        };
+        if (this.currentNode == null) {
+            this.reset();
+        }
     };
 
-    return commandBox;
+    commandBoxPrototype.reset = function () {
+        this.commandStack = [];
+        this.nodeStack = [];
+        this.currentNode = this.hooks;
+    };
 
-}());
+    commandBoxPrototype.pop = function () {
+        this.commandStack.pop();
+        this.currentNode = this.nodeStack.pop();
+        if (this.currentNode == null) {
+            this.currentNode = this.hooks;
+        }
+    };
+});
