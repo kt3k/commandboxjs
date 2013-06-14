@@ -11,11 +11,11 @@ this.commandBox = this.exports = Object.branch(function (commandBoxPrototype) {
     commandBoxPrototype.constructor = function (args) {
         this.hooks = args.hooks || {};
         this.reset();
-    }
+    };
 
     commandBoxPrototype.command = function (cmd) {
         if (this.currentNode[cmd] == null) {
-            console.warn('illegal command: ' + cmd);
+            window.console.warn('illegal command: ' + cmd);
             return;
         }
 

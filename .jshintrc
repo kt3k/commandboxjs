@@ -13,5 +13,7 @@
     "camelcase": true,
 
     "eqnull": true,
-    "expr": true
+    "expr": true,
+
+    "browser": true
 }
