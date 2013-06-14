@@ -1,8 +1,8 @@
 /**
- * commandbox.js 0.1
+ * commandbox.js 1.0
  * author: kt3k (Yosiya Hinosawa)
  * license: MIT license
- * url: https://github.com/kt3k/commandboxjs
+ * dependency: ylep.js
  */
 
 this.commandBox = this.exports = Object.branch(function (commandBoxPrototype) {
